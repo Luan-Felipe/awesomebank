@@ -1,12 +1,13 @@
 package br.com.zup.awesomebank.controller;
 
 import br.com.zup.awesomebank.model.dto.ClienteDTO;
-import br.com.zup.awesomebank.model.dto.RespostaDeErroDTO;
+import br.com.zup.awesomebank.model.dto.RespostaDTO;
 import br.com.zup.awesomebank.mapper.ClienteMapper;
 import br.com.zup.awesomebank.model.exceptions.DbException;
 import br.com.zup.awesomebank.model.entities.Cliente;
 import br.com.zup.awesomebank.services.CadastroDeClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -31,20 +32,24 @@ public class CadastroDeClienteController {
 
     @PostMapping(value = "/cadastrar")
 
-    public ResponseEntity<Object> cadastrar(@RequestBody @Valid ClienteDTO clienteDTO, BindingResult bindingResult) {
+    public ResponseEntity<RespostaDTO> cadastrar(@RequestBody @Valid ClienteDTO clienteDTO, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
-            return new ResponseEntity(new RespostaDeErroDTO(errors), HttpStatus.BAD_REQUEST);
+            List<String> errors = bindingResult.getAllErrors()
+              .stream()
+              .map(DefaultMessageSourceResolvable::getDefaultMessage)
+              .collect(Collectors.toList());
+
+            return new ResponseEntity<RespostaDTO>(new RespostaDTO(errors), HttpStatus.BAD_REQUEST);
         }
 
-        Cliente cliente;
+        String mensagem;
         try {
-            cliente = service.cadastrar(mapper.clienteDtoParaCliente(clienteDTO));
+            mensagem = service.cadastrar(mapper.clienteDtoParaCliente(clienteDTO));
         }catch (DbException e){
-            return new ResponseEntity(new RespostaDeErroDTO(e.getMessage()),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<RespostaDTO>(new RespostaDTO(e.getMessage()),HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(mapper.clienteParaClienteDto(cliente), HttpStatus.CREATED);
+        return new ResponseEntity<RespostaDTO>(new RespostaDTO(mensagem), HttpStatus.CREATED);
     }
 }
 

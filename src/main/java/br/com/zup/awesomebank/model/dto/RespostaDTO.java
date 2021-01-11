@@ -3,16 +3,16 @@ package br.com.zup.awesomebank.model.dto;
 import java.util.Collections;
 import java.util.List;
 
-public class RespostaDeErroDTO {
+public class RespostaDTO {
 
     private List<String> mensagens;
 
-    public RespostaDeErroDTO(List<String> mensagens) {
+    public RespostaDTO(List<String> mensagens) {
 
         this.mensagens = mensagens;
     }
 
-    public RespostaDeErroDTO(String message) {
+    public RespostaDTO(String message) {
 
         this.mensagens = Collections.singletonList(message);
     }

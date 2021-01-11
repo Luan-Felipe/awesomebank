@@ -7,10 +7,9 @@ import org.mapstruct.Mapping;
 
 
 @Mapper(componentModel = "spring")
-public interface ClienteMapper{
+public interface ClienteMapper {
 
-    @Mapping(target = "dataDeNascimento", dateFormat = "dd/MM/yyyy")
-    Cliente clienteDtoParaCliente(ClienteDTO clienteDto);
-
-    ClienteDTO clienteParaClienteDto(Cliente cliente);
+  @Mapping(target = "dataDeNascimento", dateFormat = "dd/MM/yyyy")
+  Cliente clienteDtoParaCliente(ClienteDTO clienteDto);
 }
+
